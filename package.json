@@ -3,7 +3,8 @@
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "NODE_ENV=development bun run --watch src/main.js"
+    "dev": "NODE_ENV=development bun run --watch src/main.js",
+    "migrate:run": "bunx prisma migrate dev --name init"
   },
   "dependencies": {
     "@elysiajs/jwt": "^0.7.0",

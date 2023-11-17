@@ -11,18 +11,19 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
+  id        Int           @id @default(autoincrement())
+  email     String        @unique
   name      String
   username  String
   password  String
-  picture   String?   @db.Text
-  uuid      String    @db.Uuid
+  picture   String?       @db.Text
+  uuid      String        @db.Uuid
   messages  Message[]
-  status    Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  Group     Group?    @relation(fields: [groupId], references: [id])
-  groupId   Int?
+  status    Boolean       @default(true)
+  createdAt DateTime      @default(now())
+  groups    UserOnGroup[]
+
+  @@map("users")
 }
 
 model Message {
@@ -30,13 +31,29 @@ model Message {
   text     String @db.Text
   sender   User   @relation(fields: [senderId], references: [id])
   senderId Int
-  Group    Group? @relation(fields: [groupId], references: [id])
+  group    Group? @relation(fields: [groupId], references: [id])
   groupId  Int?
+
+  @@map("messages")
 }
 
 model Group {
-  id       Int       @id @default(autoincrement())
+  id       Int           @id @default(autoincrement())
   name     String
   messages Message[]
-  members  User[]
+  users    UserOnGroup[]
+
+  @@map("groups")
+}
+
+model UserOnGroup {
+  id         Int      @id @default(autoincrement())
+  User       User?    @relation(fields: [userId], references: [id])
+  userId     Int?
+  group      Group?   @relation(fields: [groupId], references: [id])
+  groupId    Int?
+  assignedAt DateTime @default(now())
+  assignedBy String
+
+  @@map("users_groups")
 }
